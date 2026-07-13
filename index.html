@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para la más bella del universo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #05061b;
+    --nebula-wine: #4a1030;
+    --deep-violet: #1a1240;
+    --starlight: #f4d799;
+    --rose-gold: #e8b4bc;
+    --warm-white: #fdf6ef;
+    --ink: #cfc9e8;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background: var(--void);
+    color: var(--warm-white);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  canvas#stars{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(74,16,48,0.55), transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(26,18,64,0.65), transparent 60%),
+      var(--void);
+  }
+
+  .layer{
+    position: relative;
+    z-index: 1;
+  }
+
+  section{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6vh 6vw;
+    text-align: center;
+    position: relative;
+  }
+
+  /* ---------- COVER ---------- */
+  #cover{
+    cursor: pointer;
+  }
+
+  #cover .eyebrow{
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--rose-gold);
+    margin-bottom: 1.5rem;
+    opacity: 0.85;
+  }
+
+  #cover h1{
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    color: var(--starlight);
+    text-shadow: 0 0 30px rgba(244,215,153,0.35);
+    line-height: 1.1;
+  }
+
+  #cover .sub{
+    margin-top: 1.2rem;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    color: var(--ink);
+    max-width: 30rem;
+  }
+
+  .pulse-ring{
+    margin-top: 3rem;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid var(--rose-gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .pulse-ring::before{
+    content: "♡";
+    color: var(--rose-gold);
+    font-size: 1.4rem;
+  }
+  @keyframes pulse{
+    0%,100%{ transform: scale(1); box-shadow: 0 0 0 0 rgba(232,180,188,0.35); }
+    50%{ transform: scale(1.08); box-shadow: 0 0 0 14px rgba(232,180,188,0); }
+  }
+
+  .tap-hint{
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.6;
+  }
+
+  /* ---------- LETTER ---------- */
+  #letter h2{
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--starlight);
+    max-width: 42rem;
+    margin-bottom: 2rem;
+  }
+
+  #letter p{
+    max-width: 38rem;
+    font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    line-height: 1.75;
+    color: var(--warm-white);
+    margin-bottom: 1.4rem;
+  }
+
+  #letter p em{
+    color: var(--rose-gold);
+    font-style: italic;
+  }
+
+  .signature{
+    margin-top: 2rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: var(--starlight);
+  }
+
+  .scroll-cue{
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.7;
+  }
+  .scroll-cue::after{
+    content: "";
+    display:block;
+    width:1px; height:28px;
+    background: var(--rose-gold);
+    margin: 0.6rem auto 0;
+    animation: drip 1.8s ease-in-out infinite;
+  }
+  @keyframes drip{
+    0%{ opacity:0; transform: translateY(-6px); }
+    50%{ opacity:1; }
+    100%{ opacity:0; transform: translateY(10px); }
+  }
+
+  /* ---------- SCROLL REVEAL ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.in-view{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------- BOOK / "TE AMO COMO UN LIBRO" ---------- */
+  #book .hint{
+    color: var(--ink);
+    font-size: 1rem;
+    margin-bottom: 2.4rem;
+    max-width: 30rem;
+  }
+
+  .book{
+    position: relative;
+    width: min(90vw, 560px);
+    height: min(56vh, 360px);
+    margin: 0 0 2.2rem;
+    perspective: 1600px;
+  }
+
+  .book-page{
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(160deg, rgba(26,18,64,0.55), rgba(74,16,48,0.32));
+    border: 1px solid rgba(232,180,188,0.22);
+    border-radius: 12px;
+    padding: 2.6rem 2.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    backface-visibility: hidden;
+    transform-origin: left center;
+    transform: rotateY(-28deg) scale(0.96);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    transition: transform 0.75s cubic-bezier(.3,.1,.2,1), opacity 0.6s ease;
+    box-shadow: 0 20px 55px rgba(0,0,0,0.35);
+  }
+  .book-page.active{
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+    z-index: 2;
+    pointer-events: auto;
+  }
+  .book-page .page-number{
+    font-family: 'Dancing Script', cursive;
+    color: var(--rose-gold);
+    font-size: 1.3rem;
+    opacity: 0.75;
+    margin-bottom: 1rem;
+  }
+  .book-page p{
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    line-height: 1.7;
+    color: var(--warm-white);
+    max-width: 30rem;
+  }
+  .book-page.final .page-number{
+    font-size: 2rem;
+  }
+  .book-page.final .final-line{
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.6rem, 4.4vw, 2.2rem);
+    color: var(--starlight);
+    text-shadow: 0 0 24px rgba(244,215,153,0.35);
+  }
+
+  .book-controls{
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+  }
+  .book-controls button.arrow{
+    background: transparent;
+    border: 1px solid var(--rose-gold);
+    color: var(--rose-gold);
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .book-controls button.arrow:hover{
+    background: rgba(232,180,188,0.14);
+    box-shadow: 0 0 20px rgba(232,180,188,0.3);
+  }
+  .book-dots{
+    display: flex;
+    gap: 0.5rem;
+  }
+  .book-dot{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(207,201,232,0.3);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+  .book-dot.active{
+    background: var(--rose-gold);
+    box-shadow: 0 0 10px rgba(232,180,188,0.6);
+    transform: scale(1.3);
+  }
+
+  /* ---------- GAZE / CONSTELLATION GALLERY ---------- */
+  #gaze .eyebrow{
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--rose-gold);
+    margin-bottom: 1rem;
+  }
+
+  #gaze h2{
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+    color: var(--starlight);
+    margin-bottom: 0.6rem;
+  }
+
+  #gaze .hint{
+    color: var(--ink);
+    font-size: 1rem;
+    margin-bottom: 3rem;
+    max-width: 30rem;
+  }
+
+  .constellation{
+    position: relative;
+    width: min(90vw, 620px);
+    height: min(90vw, 460px);
+    perspective: 900px;
+  }
+
+  .constellation svg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .constellation svg line{
+    stroke: rgba(232,180,188,0.35);
+    stroke-width: 1;
+  }
+
+  .star-point{
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--starlight), rgba(244,215,153,0));
+    box-shadow: 0 0 18px 4px rgba(244,215,153,0.55);
+    cursor: pointer;
+    transform: translate(-50%,-50%);
+    border: none;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  .star-point:nth-child(odd){ animation-delay: 0.6s; }
+
+  @keyframes twinkle{
+    0%,100%{ opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+    50%{ opacity: 1; transform: translate(-50%,-50%) scale(1.25); }
+  }
+
+  .star-point.revealed{
+    background: radial-gradient(circle, var(--rose-gold), rgba(232,180,188,0));
+    animation: none;
+    opacity: 0.9;
+  }
+
+  .star-point:hover, .star-point:focus-visible{
+    transform: translate(-50%,-50%) scale(1.6);
+    box-shadow: 0 0 30px 10px rgba(244,215,153,0.75);
+  }
+
+  /* positions tracing the entwined "A + F" constellation */
+  #p1{ left: 9%;  top: 88%; }   /* A - bottom-left foot */
+  #p2{ left: 27%; top: 13%; }   /* A - peak */
+  #p3{ left: 18%; top: 55%; }   /* A - crossbar left */
+  #p4{ left: 44%; top: 13%; }   /* F - top of stem */
+  #p5{ left: 68%; top: 13%; }   /* F - top arm end */
+  #pv{ left: 63%; top: 50%; }   /* F - middle arm end (video) */
+
+  .star-point.small{
+    width: 13px;
+    height: 13px;
+    box-shadow: 0 0 10px 2px rgba(244,215,153,0.4);
+  }
+  .star-point.small:hover, .star-point.small:focus-visible{
+    transform: translate(-50%,-50%) scale(1.9);
+  }
+  #d1{ left: 44%; top: 88%; }   /* shared A-foot / F-stem base */
+  #d2{ left: 36%; top: 55%; }   /* A - crossbar right */
+  #d3{ left: 44%; top: 50%; }   /* F - middle of stem */
+
+  .pupil-label{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .pupil-label span{
+    font-family:'Dancing Script', cursive;
+    font-size: clamp(1.4rem,3.6vw,2rem);
+    color: rgba(253,246,239,0.14);
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  #lightbox{
+    position: fixed;
+    inset: 0;
+    background: rgba(5,6,27,0.94);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 5vh 5vw;
+    flex-direction: column;
+  }
+  #lightbox.open{ display:flex; }
+
+  #lightbox img, #lightbox video{
+    max-width: min(90vw, 640px);
+    max-height: 72vh;
+    border-radius: 6px;
+    box-shadow: 0 0 60px rgba(244,215,153,0.25);
+    opacity: 0;
+    transform: scale(0.85);
+    animation: reveal-pop 0.6s cubic-bezier(.2,.9,.3,1.2) forwards;
+  }
+
+  @keyframes reveal-pop{
+    to{ opacity:1; transform: scale(1); }
+  }
+
+  #lightbox .lb-caption{
+    margin-top: 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--rose-gold);
+    font-size: 1.1rem;
+  }
+
+  #lightbox .lb-close{
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: 1px solid var(--rose-gold);
+    color: var(--rose-gold);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  /* ---------- SECRET DEDICATION ---------- */
+  #secret h2{
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem,4vw,2.3rem);
+    color: var(--starlight);
+    margin-bottom: 1.5rem;
+  }
+
+  #secret-btn{
+    background: transparent;
+    border: 1px solid var(--rose-gold);
+    color: var(--rose-gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 2rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.35s ease;
+  }
+  #secret-btn:hover{
+    background: rgba(232,180,188,0.12);
+    box-shadow: 0 0 24px rgba(232,180,188,0.3);
+  }
+
+  #secret-text{
+    max-width: 40rem;
+    margin-top: 2.4rem;
+    font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+    line-height: 1.8;
+    color: var(--warm-white);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  #secret-text.show{
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #secret-text .sign{
+    display:block;
+    margin-top: 1.6rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.9rem;
+    color: var(--starlight);
+  }
+
+  .us-frame{
+    position: relative;
+    margin: 2.2rem auto 1.8rem;
+    width: min(84vw, 340px);
+    padding: 14px;
+    background: linear-gradient(160deg, rgba(26,18,64,0.5), rgba(74,16,48,0.3));
+    border: 1px solid rgba(232,180,188,0.35);
+    border-radius: 4px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 40px rgba(244,215,153,0.08);
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    transition: opacity 0.9s ease 0.3s, transform 0.9s ease 0.3s;
+  }
+  #secret-text.show .us-frame{
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .us-frame::before, .us-frame::after,
+  .us-frame img::before{
+    content: "";
+  }
+  .us-frame::before{
+    position: absolute;
+    top: 6px; left: 6px;
+    width: 16px; height: 16px;
+    border-top: 1px solid var(--rose-gold);
+    border-left: 1px solid var(--rose-gold);
+    opacity: 0.8;
+  }
+  .us-frame::after{
+    position: absolute;
+    bottom: 6px; right: 6px;
+    width: 16px; height: 16px;
+    border-bottom: 1px solid var(--rose-gold);
+    border-right: 1px solid var(--rose-gold);
+    opacity: 0.8;
+  }
+  .us-frame img{
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 2px;
+    filter: saturate(0.94) contrast(1.02);
+  }
+  .us-frame figcaption{
+    margin-top: 0.7rem;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.15rem;
+    color: var(--rose-gold);
+    opacity: 0.85;
+  }
+
+  .heart-burst{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    overflow: hidden;
+  }
+  .heart{
+    position: absolute;
+    bottom: 0;
+    font-size: 1.4rem;
+    color: var(--rose-gold);
+    opacity: 0.9;
+    animation: floatUp 2.6s ease-in forwards;
+  }
+  @keyframes floatUp{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+    100%{ transform: translateY(-100vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
+  }
+
+  footer{
+    padding: 4vh 6vw 6vh;
+    text-align:center;
+    color: var(--ink);
+    font-size: 0.85rem;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="layer">
+
+  <!-- COVER -->
+  <section id="cover">
+    <div class="eyebrow">una carta para ti</div>
+    <h1>Para la más bella<br>del universo</h1>
+    <p class="sub">Antes de abrirla, cierra los ojos un segundo.<br>Esto está hecho solo para ti, Angela.</p>
+    <div class="pulse-ring"></div>
+    <div class="tap-hint">toca para abrir</div>
+  </section>
+
+  <!-- LETTER -->
+  <section id="letter">
+    <h2 class="reveal">Hay algo que necesito decirte, aunque ya lo sepas de memoria.</h2>
+    <p class="reveal">Dicen que el universo es inmenso, que nadie puede abarcarlo con la mirada.
+       Pero yo lo he visto completo, <em>y cabe entero en tus ojos.</em></p>
+    <p class="reveal">Ahí está todo: la vastedad, el silencio bonito de las estrellas,
+       la luz que tarda años en llegar y que aun así llega, puntual, cada vez que me miras.</p>
+    <p class="reveal">Tu mirada no se parece a nada que exista. Es lo único verdaderamente
+       indescriptible que conozco: intento ponerle palabras y todas se quedan cortas.
+       <em>Ahí vive lo más lindo que he visto jamás.</em></p>
+    <p class="reveal">Y no se queda solo en tus ojos. Tu cara entera, tu forma de reír,
+       la manera en que te mueves por el mundo sin saber lo hermosa que eres:
+       todo eso es aún más bello que la mirada que le da inicio.</p>
+    <p class="reveal">Pero lo que de verdad me tiene sin remedio es tu corazón.
+       Ese es, sin duda, lo más lindo de todo lo lindo que existe.
+       Eres, sin exagerar una sola palabra, <em>lo más bello de la creación entera.</em></p>
+    <div class="signature reveal">Sigue bajando, hay más.</div>
+    <div class="scroll-cue">desliza</div>
+  </section>
+
+  <!-- BOOK: "TE AMO COMO SE AMA UN LIBRO" -->
+  <section id="book">
+    <div class="eyebrow" style="color:var(--rose-gold); letter-spacing:0.3em; text-transform:uppercase; font-size:0.7rem; margin-bottom:1rem;">un amor que se lee</div>
+    <h2 class="reveal" style="font-family:'Playfair Display', serif; font-size:clamp(1.7rem, 4.5vw, 2.6rem); color:var(--starlight); margin-bottom:0.6rem;">Te amo como se ama un libro</h2>
+    <p class="hint reveal">Pasa las páginas. Cada una es una razón más para no querer llegar al final.</p>
+
+    <div class="book" id="book-widget">
+      <div class="book-page active" data-page="0">
+        <span class="page-number">01</span>
+        <p>Te quiero como se quiere un libro: con ganas de no llegar nunca a la última página.</p>
+      </div>
+      <div class="book-page" data-page="1">
+        <span class="page-number">02</span>
+        <p>Cada vez que estoy contigo siento que apenas voy en el primer capítulo, y ya ansío el siguiente.</p>
+      </div>
+      <div class="book-page" data-page="2">
+        <span class="page-number">03</span>
+        <p>Cada gesto tuyo es una línea que releo. Cada palabra tuya, un párrafo que subrayo en mi memoria.</p>
+      </div>
+      <div class="book-page" data-page="3">
+        <span class="page-number">04</span>
+        <p>No hay página tuya que me canse. Quiero tus capítulos completos: los luminosos y los que escribes en silencio.</p>
+      </div>
+      <div class="book-page" data-page="4">
+        <span class="page-number">05</span>
+        <p>Y lo más hermoso es que sé que nunca voy a terminar de leerte, porque cada día escribes algo nuevo que quiero descubrir.</p>
+      </div>
+      <div class="book-page final" data-page="5">
+        <span class="page-number">∞</span>
+        <p class="final-line">Contigo, quiero ser un lector eterno.</p>
+      </div>
+    </div>
+
+    <div class="book-controls">
+      <button class="arrow" id="book-prev" aria-label="página anterior">‹</button>
+      <div class="book-dots" id="book-dots"></div>
+      <button class="arrow" id="book-next" aria-label="página siguiente">›</button>
+    </div>
+  </section>
+
+  <!-- CONSTELLATION / GAZE GALLERY -->
+  <section id="gaze">
+    <div class="eyebrow">la constelación de tu mirada</div>
+    <h2>Ahí guardé un pedazo de nuestro universo</h2>
+    <p class="hint">Toca cada estrella. Cada una guarda algo que quiero que veas.</p>
+
+    <div class="constellation" id="constellation">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="9"  y1="88" x2="27" y2="13"></line>  <!-- A: pierna izq -->
+        <line x1="27" y1="13" x2="44" y2="88"></line>  <!-- A: pierna der -->
+        <line x1="18" y1="55" x2="36" y2="55"></line>  <!-- A: travesaño -->
+        <line x1="44" y1="88" x2="44" y2="13"></line>  <!-- F: tallo (entrelazado con A) -->
+        <line x1="44" y1="13" x2="68" y2="13"></line>  <!-- F: brazo superior -->
+        <line x1="44" y1="50" x2="63" y2="50"></line>  <!-- F: brazo medio -->
+      </svg>
+
+      <div class="pupil-label"><span>F &amp; A</span></div>
+
+      <button class="star-point" id="p1" data-type="img" data-src="ft1.jpg" data-caption="El primer momento que quise guardar."></button>
+      <button class="star-point" id="p2" data-type="img" data-src="ft2.jpg" data-caption="Así te ves cuando no sabes que te miro."></button>
+      <button class="star-point" id="p3" data-type="img" data-src="ft3.jpg" data-caption="Uno de mis instantes favoritos de nosotros."></button>
+      <button class="star-point" id="p4" data-type="img" data-src="ft4.jpg" data-caption="Este también vive en mi memoria todos los días."></button>
+      <button class="star-point" id="p5" data-type="img" data-src="ft5.jpg" data-caption="El último, pero de mis preferidos."></button>
+      <button class="star-point" id="pv" data-type="video" data-src="vid1.mp4" data-caption="Y este, mejor míralo con calma."></button>
+      <button class="star-point small" id="d1" data-type="img" data-src="ft6.jpg" data-caption="Un pedacito más de nosotros, escondido aquí."></button>
+      <button class="star-point small" id="d2" data-type="img" data-src="ft7.jpg" data-caption="Este lo guardé solo para cuando llegaras hasta aquí."></button>
+      <button class="star-point small" id="d3" data-type="video" data-src="vid2.mp4" data-caption="Uno más, para que nunca se te olvide cómo te veo."></button>
+    </div>
+  </section>
+
+  <!-- SECRET DEDICATION -->
+  <section id="secret">
+    <div class="eyebrow" style="color:var(--rose-gold); letter-spacing:0.3em; text-transform:uppercase; font-size:0.7rem; margin-bottom:1rem;">algo más, solo para ti</div>
+    <h2>Hay una última cosa que quiero decirte</h2>
+    <button id="secret-btn">abrir la dedicatoria secreta</button>
+    <div id="secret-text">
+      <p>
+        Si alguna vez dudas de lo hermosa que eres, quiero que vuelvas aquí.
+        No hay nada en este mundo, ni en ningún otro, que se compare a ti:
+        ni el espacio con todas sus estrellas, ni la noche más despejada,
+        ni nada que alguien pueda nombrar. Tu mirada guarda el universo entero,
+        tu rostro y tu cuerpo son la belleza hecha persona, y tu corazón
+        es, sin ninguna duda, lo más lindo que existe. Eres, completa y
+        exactamente, lo más bello de toda la creación. Y tengo la fortuna
+        inmensa de quererte.
+      </p>
+
+      <figure class="us-frame">
+        <img src="nosotros.jpg" alt="Nosotros">
+        <figcaption>nosotros</figcaption>
+      </figure>
+
+      <span class="sign">Te amo, hoy y siempre.</span>
+    </div>
+  </section>
+
+  <footer>hecho con todo mi amor, para ti</footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lb-close" id="lb-close">✕</button>
+  <div id="lb-content"></div>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
+<audio id="bg-audio" src="lof.mp3" loop preload="auto"></audio>
+
+<script>
+/* ---------- STARFIELD BACKGROUND ---------- */
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+function initStars(){
+  const count = Math.floor((canvas.width * canvas.height) / 9000);
+  stars = Array.from({length: count}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.3 + 0.2,
+    speed: Math.random() * 0.15 + 0.02,
+    twinkleSpeed: Math.random() * 0.02 + 0.005,
+    phase: Math.random() * Math.PI * 2
+  }));
+}
+function drawStars(t){
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  for(const s of stars){
+    s.phase += s.twinkleSpeed;
+    const alpha = 0.4 + Math.sin(s.phase) * 0.4;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(253,246,239,${Math.max(0,alpha)})`;
+    ctx.fill();
+    s.y += s.speed;
+    if(s.y > canvas.height){ s.y = 0; s.x = Math.random()*canvas.width; }
+  }
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', () => { resize(); initStars(); });
+resize(); initStars(); requestAnimationFrame(drawStars);
+// re-measure after content settles (fonts/layout)
+setTimeout(() => { resize(); initStars(); }, 800);
+
+/* ---------- COVER -> OPEN + MUSIC ---------- */
+const cover = document.getElementById('cover');
+const audio = document.getElementById('bg-audio');
+cover.addEventListener('click', () => {
+  audio.volume = 0.55;
+  audio.play().catch(()=>{});
+  document.getElementById('letter').scrollIntoView({behavior:'smooth'});
+}, { once: false });
+
+/* ---------- GALLERY / LIGHTBOX ---------- */
+const lightbox = document.getElementById('lightbox');
+const lbContent = document.getElementById('lb-content');
+const lbCaption = document.getElementById('lb-caption');
+
+document.querySelectorAll('.star-point').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.add('revealed');
+    const type = btn.dataset.type;
+    const src = btn.dataset.src;
+    lbContent.innerHTML = '';
+    if(type === 'img'){
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'foto especial';
+      lbContent.appendChild(img);
+    } else {
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.autoplay = true;
+      vid.loop = true;
+      vid.playsInline = true;
+      vid.controls = false;
+      vid.disablePictureInPicture = true;
+      vid.setAttribute('controlsList', 'nodownload noplaybackrate nofullscreen');
+      lbContent.appendChild(vid);
+      vid.play().catch(()=>{});
+    }
+    lbCaption.textContent = btn.dataset.caption || '';
+    lightbox.classList.add('open');
+  });
+});
+
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  lbContent.querySelectorAll('video').forEach(v => v.pause());
+  lbContent.innerHTML = '';
+}
+
+/* ---------- SCROLL REVEAL ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+revealEls.forEach((el, i) => { el.style.transitionDelay = (i % 6) * 0.08 + 's'; });
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* ---------- BOOK WIDGET ---------- */
+const bookPages = document.querySelectorAll('.book-page');
+const bookDotsWrap = document.getElementById('book-dots');
+let bookIndex = 0;
+
+bookPages.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'book-dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', 'página ' + (i + 1));
+  dot.addEventListener('click', () => goToPage(i));
+  bookDotsWrap.appendChild(dot);
+});
+const bookDots = bookDotsWrap.querySelectorAll('.book-dot');
+
+function goToPage(i){
+  if(i < 0) i = bookPages.length - 1;
+  if(i >= bookPages.length) i = 0;
+  bookIndex = i;
+  bookPages.forEach((p, idx) => p.classList.toggle('active', idx === i));
+  bookDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+  if(i === bookPages.length - 1){
+    burstHearts();
+  }
+}
+document.getElementById('book-prev').addEventListener('click', () => goToPage(bookIndex - 1));
+document.getElementById('book-next').addEventListener('click', () => goToPage(bookIndex + 1));
+
+/* ---------- SECRET DEDICATION + HEART EXPLOSION ---------- */
+const secretBtn = document.getElementById('secret-btn');
+const secretText = document.getElementById('secret-text');
+let secretOpened = false;
+
+secretBtn.addEventListener('click', () => {
+  if(secretOpened) return;
+  secretOpened = true;
+  burstHearts();
+  setTimeout(() => secretText.classList.add('show'), 400);
+  secretBtn.style.opacity = '0.4';
+  secretBtn.style.pointerEvents = 'none';
+});
+
+/* ---------- PARALLAX EN LA CONSTELACIÓN ---------- */
+const constellationEl = document.getElementById('constellation');
+if(constellationEl){
+  constellationEl.addEventListener('mousemove', (e) => {
+    const rect = constellationEl.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    constellationEl.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg)`;
+  });
+  constellationEl.style.transition = 'transform 0.3s ease';
+  constellationEl.style.transformStyle = 'preserve-3d';
+  constellationEl.addEventListener('mouseleave', () => {
+    constellationEl.style.transform = 'rotateY(0deg) rotateX(0deg)';
+  });
+}
+
+/* ---------- RASTRO DE CORAZONES DEL CURSOR ---------- */
+let lastTrail = 0;
+document.addEventListener('mousemove', (e) => {
+  const now = Date.now();
+  if(now - lastTrail < 140) return;
+  lastTrail = now;
+  const t = document.createElement('div');
+  t.textContent = '♡';
+  t.style.position = 'fixed';
+  t.style.left = e.clientX + 'px';
+  t.style.top = e.clientY + 'px';
+  t.style.color = 'var(--rose-gold)';
+  t.style.fontSize = (0.6 + Math.random()*0.5) + 'rem';
+  t.style.pointerEvents = 'none';
+  t.style.zIndex = '40';
+  t.style.opacity = '0.85';
+  t.style.transform = 'translate(-50%,-50%)';
+  t.style.transition = 'opacity 1s ease, transform 1s ease';
+  document.body.appendChild(t);
+  requestAnimationFrame(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translate(-50%,-140%) scale(0.6)';
+  });
+  setTimeout(() => t.remove(), 1050);
+});
+
+/* ---------- ESTRELLAS FUGACES OCASIONALES ---------- */
+function shootingStar(){
+  const s = document.createElement('div');
+  const startX = Math.random() * window.innerWidth * 0.6;
+  const startY = Math.random() * window.innerHeight * 0.4;
+  s.style.position = 'fixed';
+  s.style.left = startX + 'px';
+  s.style.top = startY + 'px';
+  s.style.width = '2px';
+  s.style.height = '2px';
+  s.style.background = 'var(--warm-white)';
+  s.style.borderRadius = '50%';
+  s.style.boxShadow = '0 0 6px 2px rgba(253,246,239,0.8)';
+  s.style.zIndex = '2';
+  s.style.pointerEvents = 'none';
+  document.body.appendChild(s);
+  const dx = 220 + Math.random()*160;
+  const dy = 110 + Math.random()*80;
+  s.animate([
+    { transform: 'translate(0,0)', opacity: 1 },
+    { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }
+  ], { duration: 900, easing: 'ease-out' });
+  setTimeout(() => s.remove(), 950);
+  setTimeout(shootingStar, 4000 + Math.random()*6000);
+}
+setTimeout(shootingStar, 3000);
+
+function burstHearts(){
+  const layer = document.createElement('div');
+  layer.className = 'heart-burst';
+  document.body.appendChild(layer);
+  const symbols = ['♡','❤','✦','♥'];
+  for(let i=0;i<60;i++){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    h.style.left = (Math.random()*100) + 'vw';
+    h.style.setProperty('--drift', (Math.random()*200-100) + 'px');
+    h.style.setProperty('--spin', (Math.random()*360-180) + 'deg');
+    h.style.animationDelay = (Math.random()*0.6) + 's';
+    h.style.fontSize = (1 + Math.random()*1.6) + 'rem';
+    layer.appendChild(h);
+  }
+  setTimeout(() => layer.remove(), 3400);
+}
+</script>
+
+</body>
+</html>
